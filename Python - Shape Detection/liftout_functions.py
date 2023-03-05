@@ -1,6 +1,31 @@
 import cv2
 import serial
 import time
+from PIL import ImageGrab
+from win32 import win32gui
+
+toplist, winlist = [], []
+
+def enum_cb(hwnd, results):
+    winlist.append((hwnd, win32gui.GetWindowText(hwnd)))
+
+def teamviewer_capture():
+    # application = 'TeamViewer'
+    application = 'teamviewer'
+
+    win32gui.EnumWindows(enum_cb, toplist)
+
+    firefox = [(hwnd, title) for hwnd, title in winlist if application in title.lower()]
+    # just grab the hwnd for first window matching firefox
+    firefox = firefox[1]
+    hwnd = firefox[0]
+
+    win32gui.SetForegroundWindow(hwnd)
+    bbox = win32gui.GetWindowRect(hwnd)
+    img = ImageGrab.grab(bbox)
+    #img.show()
+    img.save("TeamViewerCapture.png")
+
 def fiducial_detect(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # setting threshold of gray image
@@ -43,6 +68,8 @@ def trench_detect(img):
         threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     i = 0
+    x = 0
+    y = 0
 
     # list for storing names of shapes
     for contour in contours:
@@ -68,7 +95,6 @@ def trench_detect(img):
     # cv2.imshow('shapes', img)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
-
     return x, y
 
 #def move_motor(img, ser, pixel2metric , x, y):
