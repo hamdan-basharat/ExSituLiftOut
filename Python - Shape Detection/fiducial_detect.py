@@ -1,65 +1,38 @@
 import cv2
-import numpy as np
 
-frameWidth = 480
-frameHeight = 480
-largest = 0
-cap = cv2.VideoCapture(0)
-cap.set(3, frameWidth)
-cap.set(4, frameHeight)
+# reading image
+img = cv2.imread('shape_image.png')
+# converting image into grayscale image
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+# setting threshold of gray image
+_, threshold = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+# using a findContours() function
+contours, _ = cv2.findContours(
+    threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-def empty(a):
-    pass
+i = 0
+fidSize = 60 # 60 microns
+pixel2metric = 0
 
-cv2.namedWindow("Parameters")
-cv2.resizeWindow("Parameters", 480, 120)
-# edit first numbers (initial values) after testing on object
-cv2.createTrackbar("Threshold1", "Parameters", 150, 255, empty)
-cv2.createTrackbar("Threshold2", "Parameters", 255, 255, empty)
-cv2.createTrackbar("Area", "Parameters", 5000, 100000, empty)
+# list for storing names of shapes
+for contour in contours:
+    # here we are ignoring first counter because
+    # find contour function detects whole image as shape
+    if i == 0:
+        i = 1
+        continue
+    # cv2.approxPloyDP() function to approximate the shape
+    approx = cv2.approxPolyDP(
+        contour, 0.01 * cv2.arcLength(contour, True), True)
+    # using drawContours() function
+    cv2.drawContours(img, [contour], 0, (0, 0, 255), 2)
+    if len(approx) == 3:
+        x, y, w, h = cv2.boundingRect(contour)
+        cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        pixel2metric = w/fidSize
+        print("There are " + str(pixel2metric) + " pixels for each micron")
 
-def getContours(img, imgContour):
-    contours, hierarchy = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-
-    for cnt in contours:
-        area = cv2.contourArea(cnt)
-        areaMin = cv2.getTrackbarPos("Area", "Parameters")
-        if area > areaMin:
-            cv2.drawContours(imgContour, cnt, -1, (255, 0, 255), 7)
-            peri = cv2.arcLength(cnt, True)
-            approx = cv2.approxPolyDP(cnt, 0.02 * peri, True)
-
-            x, y, w, h = cv2.boundingRect(approx)
-            cv2.rectangle(imgContour, (x, y), (x + w, y + h), (0, 255, 0), 5)
-
-            if len(approx) == 3:
-                cv2.putText(imgContour, "Fiducial", (x + int(w / 2)-35, y + int(h / 2)), cv2.FONT_HERSHEY_COMPLEX, .7,
-                            (0, 255, 0), 2)
-            else:
-                cv2.putText(imgContour, ".", (x + int(w / 2), y + int(h / 2)), cv2.FONT_HERSHEY_COMPLEX, .7,
-                            (0, 255, 0), 2)
-                cv2.putText(imgContour, "Points: " + str(len(approx)), (x + w + 20, y + 20), cv2.FONT_HERSHEY_COMPLEX,
-                            .7,
-                            (0, 255, 0), 2)
-                cv2.putText(imgContour, "Area: " + str(int(area)), (x + w + 20, y + 45), cv2.FONT_HERSHEY_COMPLEX, .7,
-                            (0, 255, 0), 2)
-
-
-while (True):
-    success, img = cap.read()
-    imgContour = img.copy()
-
-    imgBlur = cv2.GaussianBlur(img, (7, 7), 1)
-    imgGray = cv2.cvtColor(imgBlur, cv2.COLOR_BGR2GRAY)
-
-    threshold1 = cv2.getTrackbarPos("Threshold1", "Parameters")
-    threshold2 = cv2.getTrackbarPos("Threshold2", "Parameters")
-    imgCanny = cv2.Canny(imgGray, threshold1, threshold2)
-    kernel = np.ones((5, 5))
-    imgDil = cv2.dilate(imgCanny, kernel, iterations=1)
-    getContours(imgDil, imgContour)
-
-    cv2.imshow('Result', imgContour)
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+# displaying the image after drawing contours
+cv2.imshow('Fiducial', img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
