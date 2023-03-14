@@ -4,27 +4,36 @@ import time
 from PIL import ImageGrab
 from win32 import win32gui
 
-toplist, winlist = [], []
+toplist, winlist ,hwnd= [], [],[] #global variables used for the getWindow application
 
 def enum_cb(hwnd, results):
+    """
+    Helper function for getWindow
+    """
     winlist.append((hwnd, win32gui.GetWindowText(hwnd)))
 
-def teamviewer_capture():
-    # application = 'TeamViewer'
-    application = 'teamviewer'
+def getWindow(application):
+    """
+    Grabs snapshot of the provided name. Note: do not minimize out of that application, alt+tab is fine though
+    Input: the name of the application as a string
+    """
+    tvWindow = [] #reset the teamviewer window handle in case it has already been run
 
     win32gui.EnumWindows(enum_cb, toplist)
 
-    firefox = [(hwnd, title) for hwnd, title in winlist if application in title.lower()]
-    # just grab the hwnd for first window matching firefox
-    firefox = firefox[1]
-    hwnd = firefox[0]
+    tvWindow = [(hwnd, title) for hwnd, title in winlist if application in title.lower()]
+    # just grab the hwnd for first window matching teamviewer
+    print (tvWindow)
+    
+    tvWindow = tvWindow[0] #hard coded window in the list, this needs fixing
+    hwnd = tvWindow[0] #the 0th index is the number ID handle
+    print(hwnd)
 
     win32gui.SetForegroundWindow(hwnd)
     bbox = win32gui.GetWindowRect(hwnd)
     img = ImageGrab.grab(bbox)
     #img.show()
-    img.save("TeamViewerCapture.png")
+    img.save("./images/TeamViewerCapture.png")
 
 def fiducial_detect(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

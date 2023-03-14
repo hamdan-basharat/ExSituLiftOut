@@ -1,6 +1,6 @@
 from liftout_functions import *
 
-#teamviewer_capture()
+#getWindow('teamviewer')
 #img = cv2.imread('TeamViewerCapture.png')
 img = cv2.imread('shape_image.png')
 
