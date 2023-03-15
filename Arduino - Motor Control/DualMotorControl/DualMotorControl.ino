@@ -89,9 +89,12 @@ void loop() {
   char user_input; // the input from serial.read whenever it's called
   Motor activeMotor; //the current motor we want to target
   int mode; //the function we want to call for the motor's movement
+
+  digitalWrite(EN_x, LOW); //Pull enable pin low to set FETs active and allow motor control
+  digitalWrite(EN_y, LOW);
   
-  motor_x.max_step = calibrate(motor_x);
-  motor_y.max_step = calibrate(motor_y);
+  //motor_x.max_step = calibrate(motor_x);
+  //motor_y.max_step = calibrate(motor_y);
   
   //choose which motor to use
   //Print function list for user selection
