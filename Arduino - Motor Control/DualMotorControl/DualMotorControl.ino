@@ -39,8 +39,8 @@ Motor motor_x = {
   .stp = stp_x, 
   .dir = dir_x, 
   .EN = EN_x, 
-  .min_pin = A0, 
-  .max_pin = A1
+  .min_pin = x_min_lim, //redundant but useful for passing as a parameter
+  .max_pin = x_max_lim
   };
 
 Motor motor_y = {
@@ -48,8 +48,8 @@ Motor motor_y = {
   .stp = stp_y, 
   .dir = dir_y, 
   .EN = EN_y, 
-  .min_pin = A2, 
-  .max_pin = A3
+  .min_pin = y_min_lim, 
+  .max_pin = y_max_lim
   };
 
 void setup() {
@@ -68,10 +68,10 @@ void setup() {
   pinMode(MS3, OUTPUT);
 
   //set the analog pins for motor limiters
-  pinMode(x_min_lim, INPUT);
-  pinMode(x_max_lim, INPUT);
-  pinMode(y_min_lim, INPUT);
-  pinMode(y_max_lim, INPUT);
+  pinMode(x_min_lim, INPUT_PULLUP);
+  pinMode(x_max_lim, INPUT_PULLUP);
+  pinMode(y_min_lim, INPUT_PULLUP);
+  pinMode(y_max_lim, INPUT_PULLUP);
 
   digitalWrite(EN_x, LOW); //Pull enable pin low to set FETs active and allow motor control
   digitalWrite(EN_y, LOW);
@@ -92,43 +92,47 @@ void loop() {
 
   digitalWrite(EN_x, LOW); //Pull enable pin low to set FETs active and allow motor control
   digitalWrite(EN_y, LOW);
+
+  //-------------- Calibrate -------------- //
+//  motor_x.max_step = calibrate(motor_x);
+//  motor_y.max_step = calibrate(motor_y);
+//  
   
-  //motor_x.max_step = calibrate(motor_x);
-  //motor_y.max_step = calibrate(motor_y);
-  
-  //choose which motor to use
-  //Print function list for user selection
+  // -------------- choose which motor to use -------------- //
   Serial.println("Enter letter (x or y) for motor selection:");
   Serial.println();
   while (Serial.available()== 0) {};//blocking statement, basically just wait until something is available to read from serial
   user_input = Serial.read(); //Read user input and trigger appropriate function
   activeMotor = chooseMotor(user_input);
 
-  //Choose which mode to move the motor (e.g, forward, reverse...)
-  printModes();
+  // ---------- Choose which mode to move the motor (e.g, forward, reverse...) ------//
+  printModes(); //Print function list for user selection
   while (Serial.available()== 0) {};//blocking statement, basically just wait until something is available to read from serial
   user_input = Serial.read(); //Read user input and trigger appropriate function
   activateMode(user_input,activeMotor);
 
-  //reset for next run
-  resetBEDPins();
+  
+  resetBEDPins(); //reset for next run
 }//end main loop
+
+//TODO new read function that doesnt take a single char, and separates based on some delimiter
 
 int calibrate(Motor activeMotor){
   // this function drives the motors to the minimum and maximum position of the rail (determined with analog pins)
   // it returns the max number of steps the x and y motors can take before reaching the end
-  int numSteps = 0;
-  //reverse until the start is hit, at which point this pin will read HIGH
-  while (digitalRead(activeMotor.min_pin)== LOW){
-    activateMode(2,activeMotor);
+  int numSteps = 0; //number of steps taken between the beginning and the end
+  //reverse until the start is hit, at which point this pin will read LOW
+  while (digitalRead(activeMotor.min_pin)== HIGH){
+    Serial.println("Calibrate first step");
+    activateMode('2',activeMotor);//reverse mode 
   }
 
   //forward until the end is hit
-  while (digitalRead(activeMotor.max_pin)== LOW){
-    activateMode(1,activeMotor);
+  while (digitalRead(activeMotor.max_pin)== HIGH){
+    Serial.println("Calibrate second step");
+    activateMode('1',activeMotor);//forward mode
     numSteps +=1;
   }
-  
   return numSteps;
 }
 
@@ -181,8 +185,11 @@ int printModes(){
   Serial.println();
 }
 
+//TODO add parameter to include number of steps
 void activateMode(int choice, Motor activeMotor){
-  //input: a choice as an integer and a Motor to move
+  //input:  a choice as an integer 
+  //        a Motor to move
+  //        the number of steps to move        
   //output: no return value, but moves the motor based on the choice
   //1: move forward
   //2: move reverse
@@ -222,7 +229,7 @@ void activateMode(int choice, Motor activeMotor){
     }
     else
     {
-      Serial.println("Invalid option entered.");
+      Serial.println("Invalid mode selected.");
       printModes();
       while (Serial.available()== 0) {};//blocking statement, basically just wait until something is available to read from serial
       choice = Serial.read(); //Read user input and trigger appropriate function
