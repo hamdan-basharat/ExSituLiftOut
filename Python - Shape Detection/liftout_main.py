@@ -9,6 +9,6 @@ img = cv.imread('sample.png', cv.IMREAD_GRAYSCALE)
 pixel2metric, sampleCoords = shape_detect(img)
 
 # move_motor(img, ser, pixel2metric, sampleCoords[0][0], sampleCoords[1][0])
-# move_motor(img, pixel2metric, sampleCoords[0][0], sampleCoords[1][0])
+move_motor(img, pixel2metric, sampleCoords[0][0], sampleCoords[1][0], "w") # w for whole, m for micro
 
 # ser.close()
