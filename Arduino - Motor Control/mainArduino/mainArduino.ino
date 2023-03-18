@@ -8,8 +8,7 @@
 /* ----------------------
  * Included Files
    ---------------------*/ 
-#include "dualMotor.h"
-#include "calibration.h"
+#include "header.h"
 
 /* ----------------------
  * Definitions
@@ -64,8 +63,6 @@ void setup() {
   Serial.begin(9600); //Open Serial connection for debugging
   Serial.println("Begin motor control program");
   Serial.println();
-
-
 }
 
 //Main loop
@@ -77,6 +74,7 @@ void loop() {
   digitalWrite(EN_x, LOW); //Pull enable pin low to set FETs active and allow motor control
   digitalWrite(EN_y, LOW);
 
+  
   //-------------- Calibrate -------------- //
 //  motor_x.max_step = calibrate(motor_x);
 //  motor_y.max_step = calibrate(motor_y);

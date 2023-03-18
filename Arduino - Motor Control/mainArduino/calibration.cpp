@@ -2,16 +2,19 @@
  * Tony Fan 200003466
  * Ex-situ-Liftout
  * McMaster University - Capstone Group
- * This it the main arduino file for execution
+ * This is th header for the calibration functions
  */
 
 /* ----------------------
  * Included Files
    ---------------------*/ 
-int calibrate(Motor activeMotor);
+#include "header.h"
+
 /* ----------------------
  * Definitions
    ----------------------*/
+
+  
 int calibrate(Motor activeMotor){
   // this function drives the motors to the minimum and maximum position of the rail (determined with analog pins)
   // it returns the max number of steps the x and y motors can take before reaching the end

@@ -5,61 +5,12 @@
  * This is the header for the motor control
  */
 
-/* ----------------------
- * Definitions
-   ----------------------*/
-//Declare pin functions on Arduino
-#define stp_x 2
-#define dir_x 3
-#define EN_x  7
-
-#define stp_y 8
-#define dir_y 9
-#define EN_y  10
-
-#define MS1 4
-#define MS2 5
-#define MS3 6
-
-//Also declared as an attribute of the specific motors
-#define x_min_lim A0
-#define x_max_lim A1
-#define y_min_lim A2
-#define y_max_lim A3
-
-//structure to hold the motor attributes
-typedef struct motor {
-  char id; //the id of the motor, x or y
-  int stp; //the pin number in which to decide to step
-  int dir; //the pin number for direction
-  int EN; // the pin number to enable this motor
-  uint8_t min_pin;
-  uint8_t max_pin;
-  int max_step; //the maximum number of steps possible for this motor, the minimum is assumed 0
-} Motor;
-/* ----------------------
- * Prototypes
-   ---------------------*/ 
-char toLower(char c);
-Motor chooseMotor (char choice, Motor motor_x, Motor motor_y);
-int printModes();
-void activateMode(int choice, Motor activeMotor);
-void StepForwardDefault(int stp, int dir);
-void ReverseStepDefault(int stp, int dir);
-void SmallStepMode(int stp, int dir);
-void SmallStepModeRev(int stp, int dir);
-void ForwardBackwardStep(int stp, int dir);
-void resetBEDPins();
-
-
+#include "header.h"
 
 /* --------------------------------------------
  * Functions go here
   --------------------------------------------*/ 
 //TODO new read function that doesnt take a single char, and separates based on some delimiter
-
-
-
 
 //my helper functions
 char toLower(char c) {
@@ -163,7 +114,7 @@ void activateMode(int choice, Motor activeMotor){
 //Default microstep mode function
 void StepForwardDefault(int stp, int dir)
 {
-  Serial.println("Moving forward at default step mode.");
+  //Serial.println("Moving forward at default step mode.");
   digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
   for (int x = 0; x < 1000; x++) //Loop the forward stepping enough times for motion to be visible
   {
@@ -172,14 +123,14 @@ void StepForwardDefault(int stp, int dir)
     digitalWrite(stp, LOW); //Pull step pin low so it can be triggered again
     delay(1);
   }
-  Serial.println("Enter new option");
-  Serial.println();
+//  Serial.println("Enter new option");
+//  Serial.println();
 }
 
 //Reverse default microstep mode function
 void ReverseStepDefault(int stp, int dir)
 {
-  Serial.println("Moving in reverse at default step mode.");
+  //Serial.println("Moving in reverse at default step mode.");
   digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
   for (int x = 0; x < 1000; x++) //Loop the stepping enough times for motion to be visible
   {
@@ -188,14 +139,14 @@ void ReverseStepDefault(int stp, int dir)
     digitalWrite(stp, LOW); //Pull step pin low so it can be triggered again
     delay(1);
   }
-  Serial.println("Enter new option");
-  Serial.println();
+//  Serial.println("Enter new option");
+//  Serial.println();
 }
 
 // 1/16th microstep foward mode function
 void SmallStepMode(int stp, int dir)
 {
-  Serial.println("Stepping at 1/16th microstep mode.");
+  //Serial.println("Stepping at 1/16th microstep mode.");
   digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
   digitalWrite(MS1, HIGH); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
   digitalWrite(MS2, HIGH);
@@ -207,14 +158,14 @@ void SmallStepMode(int stp, int dir)
     digitalWrite(stp, LOW); //Pull step pin low so it can be triggered again
     delay(1);
   }
-  Serial.println("Enter new option");
-  Serial.println();
+//  Serial.println("Enter new option");
+//  Serial.println();
 }
 
 // 1/16th microstep backward mode function - we added this one
 void SmallStepModeRev(int stp, int dir)
 {
-  Serial.println("Stepping at 1/16th microstep mode backwards.");
+  //Serial.println("Stepping at 1/16th microstep mode backwards.");
   digitalWrite(dir, HIGH); //Pull direction pin high to move "reverse"
   digitalWrite(MS1, HIGH); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
   digitalWrite(MS2, HIGH);
@@ -226,14 +177,14 @@ void SmallStepModeRev(int stp, int dir)
     digitalWrite(stp, LOW); //Pull step pin low so it can be triggered again
     delay(1);
   }
-  Serial.println("Enter new option");
-  Serial.println();
+//  Serial.println("Enter new option");
+//  Serial.println();
 }
 
 //Forward/reverse stepping function
 void ForwardBackwardStep(int stp, int dir)
 {
-  Serial.println("Alternate between stepping forward and reverse.");
+  //Serial.println("Alternate between stepping forward and reverse.");
   for (int x = 1; x < 5; x++) //Loop the forward stepping enough times for motion to be visible
   {
     //Read direction pin state and change it
@@ -255,8 +206,8 @@ void ForwardBackwardStep(int stp, int dir)
       delay(1);
     }
   }
-  Serial.println("Enter new option");
-  Serial.println();
+//  Serial.println("Enter new option");
+//  Serial.println();
 }
 
 //Reset Easy Driver pins to default states
