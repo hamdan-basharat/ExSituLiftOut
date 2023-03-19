@@ -2,7 +2,7 @@
  * Tony Fan 200003466
  * Ex-situ-Liftout
  * McMaster University - Capstone Group
- * This is the header for the motor control
+ * This is the header file showing all used definitions, prototypes to be implemented, and structs for all .cpp files
  */
  
 #include <stdint.h> 
@@ -36,28 +36,43 @@
 //structure to hold the motor attributes
 typedef struct Motor {
   char id; //the id of the motor, x or y
-  int stp; //the pin number in which to decide to step
-  int dir; //the pin number for direction
+  int stp_pin; //the pin number in which to decide to step
+  int dir_pin; //the pin number for direction
   int EN; // the pin number to enable this motor
   uint8_t min_pin;
   uint8_t max_pin;
   int max_step; //the maximum number of steps possible for this motor, the minimum is assumed 0
 } Motor;
 
+typedef struct serialStr{
+  int x_stp; //number of steps to take in the x direction
+  int x_dir; //forward or reverse. 0 is LOW/forward, and 1 is HIGH/reverse
+  int y_stp; // number of steps in y direction
+  int y_dir; //forward or reverse.  0 is LOW/forward, and 1 is HIGH/reverse
+  char step_type; //do whole steps or micro steps
+} serialStr;
+
+
 /* ----------------------
  * Prototypes
    ---------------------*/ 
-//dualMotor.cpp
+
+//general.cpp
 char toLower(char c);
+serialStr getTokens(String userInput);
+
+//dualMotor.cpp
+void moveMotor(Motor activeMotor, int numSteps, int dir, char step_type);
+void resetBEDPins();
+
+//these functions are only for testing
 Motor chooseMotor (char choice, Motor motor_x, Motor motor_y);
 int printModes();
 void activateMode(int choice, Motor activeMotor);
-void StepForwardDefault(int stp, int dir);
-void ReverseStepDefault(int stp, int dir);
-void SmallStepMode(int stp, int dir);
-void SmallStepModeRev(int stp, int dir);
-void ForwardBackwardStep(int stp, int dir);
-void resetBEDPins();
+void StepForwardDefault(int stp_pin, int dir_pin);
+void ReverseStepDefault(int stp_pin, int dir_pin);
+void SmallStepMode(int stp_pin, int dir_pin);
+void SmallStepModeRev(int stp_pin, int dir_pin);
 
 //calibration.cpp
 int calibrate(Motor activeMotor);
