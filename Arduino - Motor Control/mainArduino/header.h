@@ -52,6 +52,11 @@
 #define y_min_lim GPB2
 #define y_max_lim GPB3
 
+//define joystick pins
+#define xStick A0
+#define yStick A1
+#define js_but 13 //joystick pushdown button
+
 //structure to hold the motor attributes
 typedef struct Motor {
   char id; //the id of the motor, x or y
@@ -71,6 +76,11 @@ typedef struct serialStr{
   char step_type; //do whole steps or micro steps
 } serialStr;
 
+typedef struct Joystick{
+  int X; //the x position of the joystick
+  int Y; //the y position of the joystick
+  int pressed; //whether the joystick has been pressed down
+} Joystick;
 
 /* ----------------------
  * Prototypes
@@ -95,3 +105,7 @@ void SmallStepModeRev(int stp_pin, int dir_pin);
 
 //calibration.cpp
 int calibrate(Motor activeMotor,Adafruit_MCP23X17 mcp);
+
+//manualMode.cpp
+//note: this isthe joystick manual mode
+Joystick getJS(Joystick js);
