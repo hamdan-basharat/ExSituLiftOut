@@ -36,11 +36,18 @@ Motor motor_y = {
   .max_pin = y_max_lim
   };
 
+Adafruit_MCP23X17 mcp; // mcp unit object for extended I/O
 /* --------------------------------------------
  * Setup and Main functions begin here
   --------------------------------------------*/ 
 void setup() {
-   //set all digital pins
+  //begin I2C for IO extender, assumed address is at 0x20 because the three address pins should be set LOW
+  if (!mcp.begin_I2C()) {
+    Serial.println("Error in I2C connection.");
+    while (1);
+  }
+  
+  //set all digital pins for XY stepper motors
   pinMode(stp_x, OUTPUT);
   pinMode(stp_y, OUTPUT);
 
@@ -54,22 +61,22 @@ void setup() {
   pinMode(MS2, OUTPUT);
   pinMode(MS3, OUTPUT);
 
-  //set the analog pins for motor limiters
-  pinMode(x_min_lim, INPUT_PULLUP);
-  pinMode(x_max_lim, INPUT_PULLUP);
-  pinMode(y_min_lim, INPUT_PULLUP);
-  pinMode(y_max_lim, INPUT_PULLUP);
+  //set the IO extended pins for motor limiters to pulled high
+  mcp.pinMode(x_min_lim, INPUT_PULLUP); 
+  mcp.pinMode(x_max_lim, INPUT_PULLUP);
+  mcp.pinMode(y_min_lim, INPUT_PULLUP);
+  mcp.pinMode(y_max_lim, INPUT_PULLUP);
 
   resetBEDPins(); //Set step, direction, microstep and enable pins to default states
-  //-------------- Calibrate -------------- //
-  digitalWrite(EN_x, LOW); //Pull enable pin low to set FETs active and allow motor control
-  digitalWrite(EN_y, LOW);
-  //motor_x.max_step = calibrate(motor_x);
-  //motor_y.max_step = calibrate(motor_y);
   
   Serial.begin(9600); //Open Serial connection for debugging
   Serial.println("Begin motor control program");
   
+  //-------------- Calibrate -------------- //
+  digitalWrite(EN_x, LOW); //Pull enable pin low to set FETs active and allow motor control
+  digitalWrite(EN_y, LOW);
+  //motor_x.max_step = calibrate(motor_x,mcp);
+  //motor_y.max_step = calibrate(motor_y,mcp);
 }
 
 //Main loop

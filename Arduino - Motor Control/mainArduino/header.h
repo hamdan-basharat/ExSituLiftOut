@@ -8,8 +8,8 @@
 #include <stdint.h> 
 #include <SoftwareSerial.h> //serial communication
 #include <Arduino.h> //basic arduino packages
+#include <Adafruit_MCP23X17.h>
 
-//extern SoftwareSerial Serial;
 
 /* ----------------------
  * Definitions
@@ -27,11 +27,30 @@
 #define MS2 5
 #define MS3 6
 
-//Also declared as an attribute of the specific motors
-#define x_min_lim A0
-#define x_max_lim A1
-#define y_min_lim A2
-#define y_max_lim A3
+//essentially a look up table to all the pins on the MCP23017 I/O extender. See ADAFRUIT git for Pin Name to Pin ID. not all are used
+#define GPA0 0 //e.g GPA0 is represented as 0 in the ADA fruit library
+#define GPA1 1
+#define GPA2 2
+#define GPA3 3
+#define GPA4 4
+#define GPA5 5
+#define GPA6 6
+#define GPA7 7
+
+#define GPB0 8
+#define GPB1 9
+#define GPB2 10
+#define GPB3 11
+#define GPB4 12
+#define GPB5 13
+#define GPB6 14
+#define GPB7 15
+
+//Also declared as an attribute of the specific motors, renamed for clarity and modularity
+#define x_min_lim GPB0
+#define x_max_lim GPB1
+#define y_min_lim GPB2
+#define y_max_lim GPB3
 
 //structure to hold the motor attributes
 typedef struct Motor {
@@ -75,4 +94,4 @@ void SmallStepMode(int stp_pin, int dir_pin);
 void SmallStepModeRev(int stp_pin, int dir_pin);
 
 //calibration.cpp
-int calibrate(Motor activeMotor);
+int calibrate(Motor activeMotor,Adafruit_MCP23X17 mcp);
