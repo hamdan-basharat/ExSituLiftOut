@@ -2,7 +2,7 @@
 
 // ok to include only the one needed
 // both included here to make things simple for example
-//#include <Adafruit_MCP23X08.h>
+#include <Adafruit_MCP23X08.h>
 #include <Adafruit_MCP23X17.h>
 
 #define LED_PIN 7     // MCP23XXX pin LED is attached to, GPA7
@@ -29,14 +29,20 @@ void setup() {
 
   // configure pin for output
   mcp.pinMode(LED_PIN, OUTPUT);
-  //mcp.pinMode(LED_PIN, INPUT_PULLUP);
+  mcp.pinMode(INPUT_PIN, INPUT_PULLUP);
 
   Serial.println("Looping...");
 }
 
 void loop() {
-  mcp.digitalWrite(LED_PIN, HIGH);
-  delay(500);
-  mcp.digitalWrite(LED_PIN, LOW);
-  delay(500);
+  
+
+  if (mcp.digitalRead(INPUT_PIN)) { //if the pin is high, hold the LED high
+     mcp.digitalWrite(LED_PIN,HIGH);
+  } else { // otherwise blink the LED
+     mcp.digitalWrite(LED_PIN, HIGH);
+    delay(500);
+    mcp.digitalWrite(LED_PIN, LOW);
+    delay(500);
+  }
 }
