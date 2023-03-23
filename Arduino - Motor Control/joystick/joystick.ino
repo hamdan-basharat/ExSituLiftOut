@@ -1,10 +1,10 @@
 #define xStick A0
 #define yStick A1
-#define pushButton 13
+#define pushButton 2
 
 
 void setup() {
-  pinMode(pushButton, INPUT);
+  pinMode(pushButton, INPUT_PULLUP);
   // put your setup code here, to run once:
   Serial.begin(9600);
 }

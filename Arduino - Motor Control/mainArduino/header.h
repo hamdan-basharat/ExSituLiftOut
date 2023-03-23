@@ -15,17 +15,17 @@
  * Definitions
    ----------------------*/
 //Declare pin functions on Arduino
-#define stp_x 2
-#define dir_x 3
-#define EN_x  7
+#define stp_x 5
+#define dir_x 6
+#define EN_x  10
 
-#define stp_y 8
-#define dir_y 9
-#define EN_y  10
+#define stp_y 11
+#define dir_y 12
+#define EN_y  13
 
-#define MS1 4
-#define MS2 5
-#define MS3 6
+#define MS1 7
+#define MS2 8
+#define MS3 9
 
 //essentially a look up table to all the pins on the MCP23017 I/O extender. See ADAFRUIT git for Pin Name to Pin ID. not all are used
 #define GPA0 0 //e.g GPA0 is represented as 0 in the ADA fruit library
@@ -55,7 +55,7 @@
 //define joystick pins
 #define xStick A0
 #define yStick A1
-#define js_but 13 //joystick pushdown button
+#define js_but 2 //joystick pushdown button
 
 //structure to hold the motor attributes
 typedef struct Motor {
@@ -108,4 +108,5 @@ int calibrate(Motor activeMotor,Adafruit_MCP23X17 mcp);
 
 //manualMode.cpp
 //note: this isthe joystick manual mode
-Joystick getJS(Joystick js);
+Joystick getJS();
+void jsMove(Joystick js, Motor motor_x, Motor motor_y);

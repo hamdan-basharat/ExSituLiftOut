@@ -37,14 +37,18 @@ Motor motor_y = {
   };
 
 Adafruit_MCP23X17 mcp; // mcp unit object for extended I/O
+
+Joystick js; // joystick data declared for global use
 /* --------------------------------------------
  * Setup and Main functions begin here
   --------------------------------------------*/ 
 void setup() {
+  Serial.begin(9600); //Open Serial connection for debugging
+  
   //begin I2C for IO extender, assumed address is at 0x20 because the three address pins should be set LOW
   if (!mcp.begin_I2C()) {
     Serial.println("Error in I2C connection.");
-    while (1);
+    //while (1); //UNCOMMENT
   }
   
   //set all digital pins for XY stepper motors
@@ -67,16 +71,27 @@ void setup() {
   mcp.pinMode(y_min_lim, INPUT_PULLUP);
   mcp.pinMode(y_max_lim, INPUT_PULLUP);
 
+  //pin for the push button on the joystick
+  pinMode(js_but, INPUT_PULLUP);
+
   resetBEDPins(); //Set step, direction, microstep and enable pins to default states
-  
-  Serial.begin(9600); //Open Serial connection for debugging
-  Serial.println("Begin motor control program");
   
   //-------------- Calibrate -------------- //
   digitalWrite(EN_x, LOW); //Pull enable pin low to set FETs active and allow motor control
   digitalWrite(EN_y, LOW);
+
+  //UNCOMMENT THESE 
   //motor_x.max_step = calibrate(motor_x,mcp);
   //motor_y.max_step = calibrate(motor_y,mcp);
+
+  //----- Manual mode until joystick is hit -----//
+  while (digitalRead(js_but)==1){ //button input is pulled high so keep looping until it is pressed (LOW)
+    js = getJS();
+    jsMove(js, motor_x, motor_y);
+//    Serial.println("in joystick mode");
+  }
+
+  Serial.println("Begin serial motor control program");
 }
 
 //Main loop
