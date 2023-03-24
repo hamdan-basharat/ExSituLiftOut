@@ -15,17 +15,17 @@
  * Definitions
    ----------------------*/
 //Declare pin functions on Arduino
-#define stp_x 5
-#define dir_x 6
-#define EN_x  10
+#define stp_x 9
+#define dir_x 8
+#define EN_x  13
 
-#define stp_y 11
-#define dir_y 12
-#define EN_y  13
+#define stp_y 6
+#define dir_y 5
+#define EN_y  7
 
-#define MS1 7
-#define MS2 8
-#define MS3 9
+#define MS1 12
+#define MS2 11
+#define MS3 10
 
 //essentially a look up table to all the pins on the MCP23017 I/O extender. See ADAFRUIT git for Pin Name to Pin ID. not all are used
 #define GPA0 0 //e.g GPA0 is represented as 0 in the ADA fruit library
@@ -53,9 +53,14 @@
 #define y_max_lim GPB3
 
 //define joystick pins
-#define xStick A0
-#define yStick A1
-#define js_but 2 //joystick pushdown button
+#define xStick A1
+#define yStick A2
+#define js_but A0 //joystick pushdown button
+
+// MANIPULATOR USES PINS 4,3,2
+#define manip_EN 4
+#define manip_stp 3
+#define manip_dir 2
 
 //structure to hold the motor attributes
 typedef struct Motor {
