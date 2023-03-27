@@ -92,11 +92,11 @@ typedef struct Joystick{
    ---------------------*/ 
 
 //general.cpp
-char toLower(char c);
-serialStr getTokens(String userInput);
+char toLower(char c); //converts given character to lower case
+serialStr getTokens(String userInput); //converts string with comma delimited values into multiple strings
 
 //dualMotor.cpp
-void moveMotor(Motor activeMotor, int numSteps, int dir, char step_type);
+void moveMotor(Motor activeMotor, int numSteps, int dir, char step_type); //moves a single motor 
 void resetBEDPins();
 
 //these functions are only for testing
@@ -114,4 +114,5 @@ int calibrate(Motor activeMotor,Adafruit_MCP23X17 mcp);
 //manualMode.cpp
 //note: this isthe joystick manual mode
 Joystick getJS();
-void jsMove(Joystick js, Motor motor_x, Motor motor_y);
+void jsMove(Joystick js, Motor motor_x, Motor motor_y); //moves the XY motors with the joystick
+void jsMove(Joystick js, Motor manip); //overloaded function for only the micro manipulator motor

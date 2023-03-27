@@ -47,3 +47,15 @@ void jsMove(Joystick js, Motor motor_x, Motor motor_y){
   }
 
 }
+
+void jsMove(Joystick js, Motor manip){
+  //this function moves a single motor forward or backward using only the Y coordinate
+  //input: joystick and motor object
+  
+  //Serial.println("moving manip motor");//debugging
+  if (js.Y < 250){
+    moveMotor(manip, 1, 0, 'w');//make the current motor take one step forwards as a whole step
+  } else if (js.Y > 750){
+    moveMotor(manip, 1, 1, 'w');//make the current motor take one step backwards as a whole step
+  }
+}

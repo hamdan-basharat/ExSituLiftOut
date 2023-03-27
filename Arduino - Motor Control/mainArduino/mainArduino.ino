@@ -36,6 +36,16 @@ Motor motor_y = {
   .max_pin = y_max_lim
   };
 
+Motor manip = {
+  .id = 'z', 
+  .stp_pin = manip_stp, 
+  .dir_pin = manip_dir, 
+  .EN = manip_EN, 
+  .min_pin = 0, //non existant for this one
+  .max_pin = 0
+};
+
+
 Adafruit_MCP23X17 mcp; // mcp unit object for extended I/O
 
 Joystick js; // joystick data declared for global use
@@ -44,6 +54,7 @@ Joystick js; // joystick data declared for global use
   --------------------------------------------*/ 
 void setup() {
   Serial.begin(9600); //Open Serial connection for debugging
+  Serial.println("Starting Ex-situ liftout.");
   
   //begin I2C for IO extender, assumed address is at 0x20 because the three address pins should be set LOW
   if (!mcp.begin_I2C()) {
@@ -104,10 +115,16 @@ void loop() {
   digitalWrite(EN_x, LOW); //Pull enable pin low to set FETs active and allow motor control
   digitalWrite(EN_y, LOW);
 
+  
+  
   //read the serial string
   Serial.println("Enter the serial string delimited by commas (x_steps, direction, y_steps, direction, step type)");
   
-  while (Serial.available()== 0) {};//blocking statement, basically just wait until something is available to read from serial
+  while (Serial.available()== 0) { //blocking statement, basically just wait until something is available to read from serial
+    //check if joystick is hit, this will control the micro manipulator
+    js = getJS(); //get joystick position
+    jsMove(js, manip);  //move manipulator according to the joystick
+  }
   user_input = Serial.readString(); //Read user input and trigger appropriate function
 
   //grab serial string components
