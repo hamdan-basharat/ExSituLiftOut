@@ -82,9 +82,9 @@ typedef struct serialStr{
 } serialStr;
 
 typedef struct Joystick{
+  int pressed; //whether the joystick has been pressed down
   int X; //the x position of the joystick
   int Y; //the y position of the joystick
-  int pressed; //whether the joystick has been pressed down
 } Joystick;
 
 /* ----------------------
@@ -114,5 +114,5 @@ int calibrate(Motor activeMotor,Adafruit_MCP23X17 mcp);
 //manualMode.cpp
 //note: this isthe joystick manual mode
 Joystick getJS();
-void jsMove(Joystick js, Motor motor_x, Motor motor_y); //moves the XY motors with the joystick
-void jsMove(Joystick js, Motor manip); //overloaded function for only the micro manipulator motor
+void jsMove(Joystick js, Motor motor_x, Motor motor_y,char step_type); //moves the XY motors with the joystick
+void jsMove(Joystick js, Motor manip,char step_type); //overloaded function for only the micro manipulator motor

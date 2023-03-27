@@ -28,34 +28,34 @@ Joystick getJS(){
   return newJs;
 }
 
-void jsMove(Joystick js, Motor motor_x, Motor motor_y){
+void jsMove(Joystick js, Motor motor_x, Motor motor_y, char step_type){
   //this function moves the motors depending on what the joystick's position is
   //input: the joystick data
   //1023 is teh maximum joystick analog value
 
   //TODO, JOYSTICK MOVE MICRO STEPS too INSTEAD OF WHOLE STEPS
   if (js.X < 250){
-    moveMotor(motor_x, 1, 0, 'w');//make the current motor take one step forwards as a whole step
+    moveMotor(motor_x, 1, 0, step_type);//make the current motor take one step forwards as a whole step
   } else if (js.X > 750){
-    moveMotor(motor_x, 1, 1, 'w');//make the current motor take one step backwards as a whole step
+    moveMotor(motor_x, 1, 1, step_type);//make the current motor take one step backwards as a whole step
   }
 
   if (js.Y < 250){
-    moveMotor(motor_y, 1, 0, 'w');//make the current motor take one step forwards as a whole step
+    moveMotor(motor_y, 1, 0, step_type);//make the current motor take one step forwards as a whole step
   } else if (js.Y > 750){
-    moveMotor(motor_y, 1, 1, 'w');//make the current motor take one step backwards as a whole step
+    moveMotor(motor_y, 1, 1, step_type);//make the current motor take one step backwards as a whole step
   }
 
 }
 
-void jsMove(Joystick js, Motor manip){
+void jsMove(Joystick js, Motor manip,char step_type){
   //this function moves a single motor forward or backward using only the Y coordinate
   //input: joystick and motor object
   
   //Serial.println("moving manip motor");//debugging
   if (js.Y < 250){
-    moveMotor(manip, 1, 0, 'w');//make the current motor take one step forwards as a whole step
+    moveMotor(manip, 1, 0, step_type);//make the current motor take one step forwards as a whole step
   } else if (js.Y > 750){
-    moveMotor(manip, 1, 1, 'w');//make the current motor take one step backwards as a whole step
+    moveMotor(manip, 1, 1, step_type);//make the current motor take one step backwards as a whole step
   }
 }
