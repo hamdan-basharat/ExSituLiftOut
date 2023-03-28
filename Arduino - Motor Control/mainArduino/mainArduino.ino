@@ -45,7 +45,7 @@ Motor manip = {
   .max_pin = 0
 };
 
-int mode = 1;//toggles when push button is pressed in main loop to switch between micro manipulator and stage
+boolean mode=true;//toggles when push button is pressed in main loop to switch between micro manipulator and stage
 
 Adafruit_MCP23X17 mcp; // mcp unit object for extended I/O
 
@@ -118,7 +118,6 @@ void setup() {
 void loop() {
   String user_input; // the input from serial.read whenever it's called
   Motor activeMotor; //the current motor we want to target
-  int mode; //the function we want to call for the motor's movement
   serialStr commands;
   
   digitalWrite(EN_x, LOW); //Pull enable pin low to set FETs active and allow motor control
@@ -133,10 +132,10 @@ void loop() {
     js = getJS(); //get current joystick position
 
     //when a button is released, toggle the mode to either control the micro manipulator or stage with joystick with micro steps
-    if ((prevJS.pressed==0) && (js.pressed==1)){mode = !mode; //Serial.println("Toggled"); }
+    if ((prevJS.pressed==0) && (js.pressed==1)){mode = (!mode);} //Serial.println("Toggled"); 
     
-    if (mode==0){jsMove(js, manip,'m');}//move manipulator according to the joystick
-    else{jsMove(js, motor_x, motor_y,'m');}
+    if (!mode){jsMove(js, manip,'m');}//move manipulator according to the joystick //Serial.println("XY MODE");
+    else{jsMove(js, motor_x, motor_y,'m');}//Serial.println("Z MODE");
     
   }
   user_input = Serial.readString(); //Read user input and trigger appropriate function
