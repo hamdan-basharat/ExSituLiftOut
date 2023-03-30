@@ -82,7 +82,7 @@ void setup() {
 
   pinMode(MS1, OUTPUT);
   pinMode(MS2, OUTPUT);
-  pinMode(MS3, OUTPUT);
+  //pinMode(MS3, OUTPUT);
 
   //set the IO extended pins for motor limiters to pulled high
   mcp.pinMode(x_min_lim, INPUT_PULLUP); 

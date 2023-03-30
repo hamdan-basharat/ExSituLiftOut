@@ -17,40 +17,40 @@
 //Declare pin functions on Arduino
 #define stp_x 9
 #define dir_x 8
-#define EN_x  13
+#define EN_x  12
 
-#define stp_y 6
-#define dir_y 5
-#define EN_y  7
+#define stp_y 3
+#define dir_y 2
+#define EN_y  4
 
-#define MS1 12
-#define MS2 11
-#define MS3 10
+#define MS1 11
+#define MS2 10
+//#define MS3 10
 
-//essentially a look up table to all the pins on the MCP23017 I/O extender. See ADAFRUIT git for Pin Name to Pin ID. not all are used
-#define GPA0 0 //e.g GPA0 is represented as 0 in the ADA fruit library
-#define GPA1 1
-#define GPA2 2
-#define GPA3 3
-#define GPA4 4
-#define GPA5 5
-#define GPA6 6
-#define GPA7 7
-
-#define GPB0 8
-#define GPB1 9
-#define GPB2 10
-#define GPB3 11
-#define GPB4 12
-#define GPB5 13
-#define GPB6 14
-#define GPB7 15
+////essentially a look up table to all the pins on the MCP23017 I/O extender. See ADAFRUIT git for Pin Name to Pin ID. not all are used
+//#define GPA0 0 //e.g GPA0 is represented as 0 in the ADA fruit library
+//#define GPA1 1
+//#define GPA2 2
+//#define GPA3 3
+//#define GPA4 4
+//#define GPA5 5
+//#define GPA6 6
+//#define GPA7 7
+//
+//#define GPB0 8
+//#define GPB1 9
+//#define GPB2 10
+//#define GPB3 11
+//#define GPB4 12
+//#define GPB5 13
+//#define GPB6 14
+//#define GPB7 15
 
 //Also declared as an attribute of the specific motors, renamed for clarity and modularity
-#define x_min_lim GPB0
-#define x_max_lim GPB1
-#define y_min_lim GPB2
-#define y_max_lim GPB3
+#define x_min_lim A4
+#define x_max_lim A5
+#define y_min_lim A6
+#define y_max_lim A7
 
 //define joystick pins
 #define xStick A1
@@ -58,9 +58,9 @@
 #define js_but A0 //joystick pushdown button
 
 // MANIPULATOR USES PINS 4,3,2
-#define manip_EN 4
-#define manip_stp 3
-#define manip_dir 2
+#define manip_EN 7
+#define manip_stp 6
+#define manip_dir 5
 
 //structure to hold the motor attributes
 typedef struct Motor {

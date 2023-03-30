@@ -21,11 +21,11 @@ void moveMotor(Motor activeMotor, int numSteps, int dir, char step_type){
   if (step_type == 'm'){ //m for micro steps
     digitalWrite(MS1, HIGH); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
     digitalWrite(MS2, HIGH);
-    digitalWrite(MS3, HIGH);
+    //digitalWrite(MS3, HIGH);
   } else { //anything else for whole steps,but it'll usually be 'w' leave this open for future changes of different steps
     digitalWrite(MS1, LOW); //Pull MS1,MS2, and MS3 LOW to set logic to whole step resolution
     digitalWrite(MS2, LOW);
-    digitalWrite(MS3, LOW);
+    //digitalWrite(MS3, LOW);
   }
   
   for (int x = 0; x < numSteps; x++) //Loop the forward stepping enough times for motion to be visible
@@ -180,7 +180,7 @@ void SmallStepMode(int stp_pin, int dir_pin)
   digitalWrite(dir_pin, LOW); //Pull direction pin low to move "forward"
   digitalWrite(MS1, HIGH); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
   digitalWrite(MS2, HIGH);
-  digitalWrite(MS3, HIGH);
+//  digitalWrite(MS3, HIGH);
   for (int x = 0; x < 1000; x++) //Loop the forward stepping enough times for motion to be visible
   {
     digitalWrite(stp_pin, HIGH); //Trigger one step forward
@@ -199,7 +199,7 @@ void SmallStepModeRev(int stp_pin, int dir_pin)
   digitalWrite(dir_pin, HIGH); //Pull direction pin high to move "reverse"
   digitalWrite(MS1, HIGH); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
   digitalWrite(MS2, HIGH);
-  digitalWrite(MS3, HIGH);
+  //digitalWrite(MS3, HIGH);
   for (int x = 0; x < 1000; x++) //Loop the forward stepping enough times for motion to be visible
   {
     digitalWrite(stp_pin, HIGH); //Trigger one step forward
