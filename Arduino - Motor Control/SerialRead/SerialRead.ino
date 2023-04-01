@@ -1,28 +1,25 @@
-String InBytes;
+String arr[4];
+String x_steps, x_dir, y_steps, y_dir, step_size;
 
 void setup() {
-  // put your setup code here, to run once:
-Serial.begin(9600);
-pinMode(LED_BUILTIN,OUTPUT);
+  Serial.begin(9600);
+  Serial.setTimeout(1);
+  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-if(Serial.available()>0){
-  InBytes = Serial.readStringUntil('\n');
-  if(InBytes){
-    Serial.print(InBytes);
+  while (Serial.available() > 0) {
+   
+    x_steps = Serial.readStringUntil(','); // writes in the string all the inputs till a comma
+    Serial.read(); 
+    x_dir = Serial.readStringUntil(',');
+    Serial.read(); 
+    y_steps = Serial.readStringUntil(',');
+    Serial.read(); 
+    y_dir = Serial.readStringUntil(',');
+    Serial.read(); 
+    step_size = Serial.readStringUntil('\n'); // writes in the string all the inputs till the end of line character
+
+    Serial.print(x_steps + x_dir + y_steps + y_dir + step_size);
   }
-  /*if(InBytes == "on"){
-    digitalWrite(LED_BUILTIN,HIGH);
-    Serial.write("LED on");
-  }
-  else if(InBytes == "off"){
-    digitalWrite(LED_BUILTIN,LOW);
-    Serial.write("LED off");
-  }
-  else{
-    Serial.write("Invalid input");
-  }*/
-}
 }

@@ -147,8 +147,13 @@ def shape_detect(img):
 
     return pixel2metric, sampleCoords
 
-#def move_motor(img, ser, pixel2metric , x, y):
-def move_motor(img, pixel2metric, x, y, stepSize):
+def write_read(x, ser):
+    ser.write(x.encode())
+    time.sleep(0.05)
+    data = ser.readline()
+    return data
+
+def move_motor(img, ser, pixel2metric, x, y, stepSize):
     x_origin, y_origin = img.shape
     x_steps = pixel2metric * (x_origin - x)
     x_dir = "f" if x_steps > 0 else "r"
@@ -156,5 +161,5 @@ def move_motor(img, pixel2metric, x, y, stepSize):
     y_dir = "f" if y_steps > 0 else "r"
 
     msg = str(abs(int(x_steps))) + "," + x_dir + "," + str(abs(int(y_steps))) + "," + y_dir + "," + stepSize
-    #ser.write(msg.encode())
-    print(msg)
+    instructions = write_read(msg, ser)
+    print("The motor instructions are: " + str(instructions))
