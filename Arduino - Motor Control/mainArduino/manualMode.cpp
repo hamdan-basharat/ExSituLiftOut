@@ -35,15 +35,15 @@ void jsMove(Joystick js, Motor motor_x, Motor motor_y, char step_type){
 
   //TODO, JOYSTICK MOVE MICRO STEPS too INSTEAD OF WHOLE STEPS
   if (js.X < 250){
-    moveMotor(motor_x, 1000, 0, step_type);//make the current motor take one step forwards as a whole step
+    moveMotor(motor_x, 1, 0, step_type);//make the current motor take one step forwards as a whole step
   } else if (js.X > 750){
-    moveMotor(motor_x, 1000, 1, step_type);//make the current motor take one step backwards as a whole step
+    moveMotor(motor_x, 1, 1, step_type);//make the current motor take one step backwards as a whole step
   }
 
   if (js.Y < 250){
-    moveMotor(motor_y, 1000, 0, step_type);//make the current motor take one step forwards as a whole step
+    moveMotor(motor_y, 1, 0, step_type);//make the current motor take one step forwards as a whole step
   } else if (js.Y > 750){
-    moveMotor(motor_y, 1000, 1, step_type);//make the current motor take one step backwards as a whole step
+    moveMotor(motor_y, 1, 1, step_type);//make the current motor take one step backwards as a whole step
   }
 
 }
