@@ -116,3 +116,4 @@ int calibrate(Motor activeMotor,Adafruit_MCP23X17 mcp);
 Joystick getJS();
 void jsMove(Joystick js, Motor motor_x, Motor motor_y,char step_type); //moves the XY motors with the joystick
 void jsMove(Joystick js, Motor manip,char step_type); //overloaded function for only the micro manipulator motor
+int changeMode(Joystick js,Joystick old_js); //chooses what the mode is and returns it

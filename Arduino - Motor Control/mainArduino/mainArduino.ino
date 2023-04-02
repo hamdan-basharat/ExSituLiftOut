@@ -45,7 +45,13 @@ Motor manip = {
   .max_pin = 0
 };
 
-boolean mode=true;//toggles when push button is pressed in main loop to switch between micro manipulator and stage
+
+int mode=0;//changes to choose what mode the joystick/motors operate in
+//1:mode needs updating
+//0: idle state
+//1:move stage 
+//2:
+//3:
 
 Adafruit_MCP23X17 mcp; // mcp unit object for extended I/O
 
@@ -62,14 +68,11 @@ void setup() {
   Serial.println("Starting Ex-situ liftout.");
   
   //begin I2C for IO extender, assumed address is at 0x20 because the three address pins should be set LOW
-  if (!mcp.begin_I2C()) {
-    Serial.println("Error in I2C connection.");
-    //while (1); //UNCOMMENT
-  }
+//  if (!mcp.begin_I2C()) {
+//    Serial.println("Error in I2C connection.");
+//    //while (1); //UNCOMMENT
+//  }
 
-  
-  js=getJS(); //initialize state of pressed to 1 for later use
-  prevJS=getJS();//the previous state of the joystick
   //set all digital pins for XY stepper motors
   pinMode(stp_x, OUTPUT);
   pinMode(stp_y, OUTPUT);
@@ -93,24 +96,10 @@ void setup() {
   //pin for the push button on the joystick
   pinMode(js_but, INPUT_PULLUP);
 
-  resetBEDPins(); //Set step, direction, microstep and enable pins to default states
+  resetBEDPins(); //Set step, direction, microstep and enable pins to default states 
   
-  //-------------- Calibrate -------------- //
-  digitalWrite(EN_x, LOW); //Pull enable pin low to set FETs active and allow motor control
-  digitalWrite(EN_y, LOW);
-
-  //UNCOMMENT THESE 
-  //motor_x.max_step = calibrate(motor_x,mcp);
-  //motor_y.max_step = calibrate(motor_y,mcp);
-
-  //----- Manual mode until joystick is hit -----//
-  while (!((prevJS.pressed == 0) && (js.pressed == 1))){ //button input is pulled high so keep looping until it is depressed and released
-    prevJS = js; //update the previous joystick
-    js = getJS();//get the current joystick
-    jsMove(js, motor_x, motor_y,'w');
-//    Serial.println("in joystick mode");
-  }
-
+  js=getJS(); //initialize state of pressed to 1 for later use
+  prevJS=getJS();//the previous state of the joystick
   Serial.println("Begin serial motor control program");
 }
 
@@ -131,11 +120,70 @@ void loop() {
     prevJS = js; //the previous joystick value
     js = getJS(); //get current joystick position
 
-    //when a button is released, toggle the mode to either control the micro manipulator or stage with joystick with micro steps
-    if ((prevJS.pressed==0) && (js.pressed==1)){mode = (!mode);} //Serial.println("Toggled"); 
+    //when a button is released, toggle the mode to either control the micro manipulator or stage with joystick with micro steps or whole steps
+    if ((prevJS.pressed==0) && (js.pressed==1) && mode!=-1){
+      mode = -1;//indicate that mode needs updating
+      prevJS.pressed=1;//reset previous push button so as not to trigger the next 
+      Serial.println("waiting for mode to be selected"); 
+    } 
+
+    if (mode==-1){ //if button was pressed/released, make the joystick change the mode we're in on the next input
+      //Serial.println("changemode"); 
+      mode = changeMode(js,prevJS);
+    } else{ //otherwise we want to make movements happen
+      switch(mode){//activate mode 
+        //IDLE STATE
+        case(0):{ 
+          Serial.println("IDLE");
+          break;
+        }
+        
+        //move the stage with whole steps (push up)
+        case(1):{ 
+          Serial.println("MODE1");
+          jsMove(js, motor_x, motor_y,'w');
+          break;
+        }
+
+        //move the manipulator with whole steps
+        case(2):{
+          Serial.println("MODE2");
+          jsMove(js, manip,'w');
+          break;
+        }
+
+        //move the stage with micro steps
+        case(3):{
+          Serial.println("MODE3");
+          jsMove(js, motor_x, motor_y,'m');
+          break;
+        }
+
+        //move the manipulator with micro steps (push down)
+        case(4):{
+          Serial.println("MODE4");
+          jsMove(js, manip,'m');
+          break;
+        }
+
+        //calibrate/center mode, activated by push button
+        case(5):{
+          Serial.println("MODE5");
+          //UNCOMMENT THESE 
+          //motor_x.max_step = calibrate(motor_x,mcp);
+          //motor_y.max_step = calibrate(motor_y,mcp);
+          mode=0;
+          break;
+        }
+
+        
+        default:{break;}
+      }
     
-    if (!mode){jsMove(js, manip,'m');}//move manipulator according to the joystick //Serial.println("XY MODE");
-    else{jsMove(js, motor_x, motor_y,'m');}//Serial.println("Z MODE");
+    }
+    
+    //if (!mode){jsMove(js, manip,'m');}//move manipulator according to the joystick //Serial.println("XY MODE");
+    //else{jsMove(js, motor_x, motor_y,'m');}//Serial.println("Z MODE");
     
   }
   user_input = Serial.readString(); //Read user input and trigger appropriate function

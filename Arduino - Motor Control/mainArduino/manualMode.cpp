@@ -59,3 +59,27 @@ void jsMove(Joystick js, Motor manip,char step_type){
     moveMotor(manip, 1, 1, step_type);//make the current motor take one step backwards as a whole step
   }
 }
+
+int changeMode(Joystick js, Joystick prevJS){
+  //this function is repeated and returns a mode depending on what is activated
+  int mode=-1;//initialize to -1 for now, this is repeatedly called to avoid blocking
+  if (js.X < 250){ //up
+    mode =1;
+    Serial.println(mode); 
+  } else if (js.X > 750){ //down
+    mode=3;
+    Serial.println(mode); 
+  }
+
+  if (js.Y > 750){ //left
+    mode=4;
+    Serial.println(mode); 
+  } else if (js.Y < 250){ //right
+    mode=2;
+    Serial.println(mode); 
+  }
+
+  if ((prevJS.pressed==0) && (js.pressed==1)){mode=5;}
+  return mode;
+  
+}
