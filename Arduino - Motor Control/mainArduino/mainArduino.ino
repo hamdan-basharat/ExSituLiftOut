@@ -83,6 +83,11 @@ void setup() {
   pinMode(EN_x, OUTPUT);
   pinMode(EN_y, OUTPUT);
 
+  //Z motor
+  pinMode(manip_EN, OUTPUT); 
+  pinMode(manip_stp, OUTPUT); 
+  pinMode(manip_dir, OUTPUT); 
+
   pinMode(MS1, OUTPUT);
   pinMode(MS2, OUTPUT);
   //pinMode(MS3, OUTPUT);
