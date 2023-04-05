@@ -4,7 +4,11 @@
  * McMaster University - Capstone Group
  * This is the header for the motor control functions
  */
-
+//FOR MICROSTEPPING:
+//00: 1/8
+//01: 1/32
+//10: 1/64
+//11: 1/16
 #include "header.h"
 
 /* --------------------------------------------
@@ -19,10 +23,10 @@ void moveMotor(Motor activeMotor, int numSteps, int dir, char step_type){
   digitalWrite(activeMotor.dir_pin, dir); //Pull direction pin low to move "forward" or high to "reverse"
 
   if (step_type == 'm'){ //m for micro steps
-    digitalWrite(MS1, HIGH); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
+    digitalWrite(MS1, LOW); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
     digitalWrite(MS2, HIGH);
     //digitalWrite(MS3, HIGH);
-  } else { //anything else for whole steps,but it'll usually be 'w' leave this open for future changes of different steps
+  } else { //anything else for whole steps,but it'll usually be 'w' leave this open for future changes of different steps THIS IS 1/8
     digitalWrite(MS1, LOW); //Pull MS1,MS2, and MS3 LOW to set logic to whole step resolution
     digitalWrite(MS2, LOW);
     //digitalWrite(MS3, LOW);
