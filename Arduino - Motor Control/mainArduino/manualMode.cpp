@@ -53,9 +53,9 @@ void jsMove(Joystick js, Motor manip,char step_type){
   //input: joystick and motor object
   
   //Serial.println("moving manip motor");//debugging
-  if (js.Y < 250){
+  if (js.X < 250){
     moveMotor(manip, 100, 0, step_type);//make the current motor take one step forwards as a whole step
-  } else if (js.Y > 750){
+  } else if (js.X > 750){
     moveMotor(manip, 100, 1, step_type);//make the current motor take one step backwards as a whole step
   }
 }
